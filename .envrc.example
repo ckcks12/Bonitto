@@ -1,0 +1,19 @@
+export REDIS_URL=
+export WORKER_INTERVAL_MS=
+
+# preparer
+export KUBERNETES_SERVICE_HOST=
+export KUBERNETES_SERVICE_PORT=
+export IMAGE_TESTER=
+export IMAGE_JAVASCRIPT=
+export IMAGE_JAVA=
+export IMAGE_GOLANG=
+export IMAGE_CPP=
+export COMMAND_JAVASCRIPT=
+export COMMAND_JAVA=
+export COMMAND_GOLANG=
+export COMMAND_CPP=
+
+# tester
+export PROBLEM_NO=
+export USER_ID=

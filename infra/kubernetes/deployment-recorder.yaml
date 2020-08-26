@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bonitto-recorder
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: bonitto-recorder
+  template:
+    metadata:
+      labels:
+        app: bonitto-recorder
+    spec:
+      containers:
+        - name: bonitto-back
+          image: bonitto-back
+          imagePullPolicy: IfNotPresent
+          command:
+            - /recorder
+          envFrom:
+            - configMapRef:
+                name: bonitto
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "256Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"

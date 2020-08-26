@@ -1,0 +1,20 @@
+FROM golang:1.13-alpine AS go
+WORKDIR /
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY cmd ./cmd
+COPY internal ./internal
+RUN go build -ldflags="-w -s" -v github.com/team-bonitto/bonitto/cmd/preparer
+RUN go build -ldflags="-w -s" -v github.com/team-bonitto/bonitto/cmd/recorder
+RUN go build -ldflags="-w -s" -v github.com/team-bonitto/bonitto/cmd/tester
+RUN go build -ldflags="-w -s" -v github.com/team-bonitto/bonitto/cmd/web
+
+FROM alpine
+COPY --from=go /preparer /preparer
+COPY --from=go /recorder /recorder
+COPY --from=go /tester /tester
+COPY --from=go /web /web
+EXPOSE 8080
+

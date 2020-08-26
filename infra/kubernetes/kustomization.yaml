@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: default
+resources:
+  - cluster-role-binding.yaml
+  - deployment-web.yaml
+  - deployment-preparer.yaml
+  - deployment-recorder.yaml
+  - service-account.yaml
+  - configmap.yaml
+  - service.yaml
+images:
+  - name: bonitto-front
+    newName: ckcks12/bonitto-front
+    newTag: v0.12
+  - name: bonitto-back
+    newName: ckcks12/bonitto-back
+    newTag: v0.17

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bonitto-web
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: bonitto-web
+  template:
+    metadata:
+      labels:
+        app: bonitto-web
+    spec:
+      containers:
+        - name: bonitto-front
+          image: bonitto-front
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+          livenessProbe:
+            httpGet:
+              port: 80
+              path: /
+            periodSeconds: 1
+          envFrom:
+            - configMapRef:
+                name: bonitto
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "256Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"
+        - name: bonitto-back
+          image: bonitto-back
+          imagePullPolicy: IfNotPresent
+          command:
+            - /web
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /live
+            periodSeconds: 1
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /ready
+            periodSeconds: 5
+          envFrom:
+            - configMapRef:
+                name: bonitto
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "256Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"

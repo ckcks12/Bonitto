@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bonitto-preparer
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: bonitto-preparer
+  template:
+    metadata:
+      labels:
+        app: bonitto-preparer
+    spec:
+      serviceAccountName: bonitto
+      containers:
+        - name: bonitto-back
+          image: bonitto-back
+          imagePullPolicy: IfNotPresent
+          command:
+            - /preparer
+          envFrom:
+            - configMapRef:
+                name: bonitto
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "256Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"
